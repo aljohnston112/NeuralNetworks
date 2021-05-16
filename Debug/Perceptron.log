@@ -1,0 +1,6 @@
+﻿  Main.cpp
+Perceptron.obj : error LNK2005: "public: virtual __thiscall ActivationFunctions::ActivationFunction::~ActivationFunction(void)" (??1ActivationFunction@ActivationFunctions@@UAE@XZ) already defined in Main.obj
+Perceptron.obj : error LNK2005: "double __cdecl ActivationFunctions::sign(class Eigen::Matrix<double,-1,1,0,-1,1> const &,class Eigen::Matrix<double,-1,1,0,-1,1> const &)" (?sign@ActivationFunctions@@YANABV?$Matrix@N$0?0$00$0A@$0?0$00@Eigen@@0@Z) already defined in Main.obj
+Perceptron.obj : error LNK2005: "double __cdecl ErrorFunctions::squared(double,double)" (?squared@ErrorFunctions@@YANNN@Z) already defined in Main.obj
+Perceptron.obj : error LNK2005: "void __cdecl BackpropogationFunctions::subInFromWeights(class Eigen::Matrix<double,-1,1,0,-1,1> const &,class Eigen::Matrix<double,-1,1,0,-1,1> &,bool)" (?subInFromWeights@BackpropogationFunctions@@YAXABV?$Matrix@N$0?0$00$0A@$0?0$00@Eigen@@AAV23@_N@Z) already defined in Main.obj
+C:\Users\johng\source\repos\Perceptron\Debug\Perceptron.exe : fatal error LNK1169: one or more multiply defined symbols found
