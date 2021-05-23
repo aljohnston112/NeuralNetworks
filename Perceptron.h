@@ -4,7 +4,11 @@
 #include <vector>
 #include <random>
 
+#include <Eigen/Dense>
+using namespace Eigen;
+
 #include "ActivationFunctions.h"
+using namespace ActivationFunctions;
 
 class Perceptron {
 public:
@@ -26,24 +30,54 @@ public:
 		bool good = false;
 		double current;
 		double error;
+		double dEOverdOut;
+		std::vector<bool> lastNeg (inOutPairs.size(), true);
+		std::vector<bool> neg(inOutPairs.size( ), true);
+		double dOutOverdNet;
+		double dNetOverdW;
+		double dW;
+		double lr = learningRate;
+		int j;
+		int epochs = 0;
 		while(!good) {
+			epochs++;
 			good = true;
-			for(auto [key, value] : inOutPairs) {
-				current = activationFunction->f(-key.dot(weights));
-				error = errorFunction(value, current);
-				if(current != value) {
+			j = -1;
+			for(auto [key, target] : inOutPairs) {
+				j++;
+				current = activationFunction->f(key.dot(weights));
+				if(((current > (target +.001)) || (current < (target - .001))) && lr > 0.001) {
 					good = false;
-					if(value) {
-						backpropogationFunction(key, weights, true);
+					error = errorFunction(target, current);
+					dEOverdOut = -(target - current);
+					lastNeg[j] = neg[j];
+					if(dEOverdOut >= 0) {
+						neg[j] = false;
 					} else {
-						backpropogationFunction(key, weights, false);
+						neg[j] = true;
 					}
+					dOutOverdNet = activationFunction->df(current);
+					for(int i = 0; i < key.size( ); i++) {
+						dNetOverdW = key[i];
+						dW = dEOverdOut * dOutOverdNet * dNetOverdW;
+						weights[i] -= (lr * dW);
+					}
+					if(neg[j] != lastNeg[j]) {
+						lr *= 0.9;
+					} else {
+						lr *= 1.1;
+					}
+					for(int i = 0; i < weights.size( ); i++) {
+						printf("w%d %f ", i, weights[i]);
+					}
+					printf("\n");
 				}
 			}
 		}
 		for(int i = 0; i < weights.size( ); i++) {
-			printf("w%d %f", i, weights[i]);
+			printf("w%d %f ", i, weights[i]);
 		}
+		printf("Epochs: %d", epochs);
 	};
 
 private:
