@@ -1,8 +1,9 @@
 #pragma once
 
 #include "Perceptron.h"
+#include "FeedForward.h"
 
-int main( ) {
+int main() {
 	VectorXd v(3);
 	v << 1, 2, 1;
 	VectorXd v1(3);
@@ -25,13 +26,15 @@ int main( ) {
 	};
 
 	Perceptron p(2);
-	ActivationFunctions::Sigmoid* s = new ActivationFunctions::Sigmoid( );
+	ActivationFunctions::Sigmoid* s = new ActivationFunctions::Sigmoid();
 	double learningRate = 1.0;
 	p.train<ComparatorVectorXd>(
-		inOutPairs, 
+		inOutPairs,
 		s,
-		BackpropogationFunctions::subInFromWeights, 
+		BackpropogationFunctions::subInFromWeights,
 		ErrorFunctions::squared,
 		learningRate);
+
+	FeedForward ff(2, 0, std::vector<int>(0), 1);
 
 }

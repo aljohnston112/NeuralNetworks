@@ -1,4 +1,6 @@
 #include "Perceptron.h"
+#include "UtilNN.h"
+using namespace UtilNN;
 
 Perceptron::Perceptron(int numInputs) {
 	weights.resize(numInputs + 1);

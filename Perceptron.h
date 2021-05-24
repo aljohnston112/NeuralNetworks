@@ -2,12 +2,11 @@
 #include <iostream>
 #include <map>
 #include <vector>
-#include <random>
 
 #include <Eigen/Dense>
 using namespace Eigen;
 
-#include "ActivationFunctions.h"
+#include "Functions.h"
 using namespace ActivationFunctions;
 
 class Perceptron {
@@ -31,50 +30,52 @@ public:
 		double current;
 		double error;
 		double dEOverdOut;
-		std::vector<bool> lastNeg (inOutPairs.size(), true);
-		std::vector<bool> neg(inOutPairs.size( ), true);
+		std::vector<bool> lastNeg(inOutPairs.size(), true);
+		std::vector<bool> neg(inOutPairs.size(), true);
 		double dOutOverdNet;
 		double dNetOverdW;
 		double dW;
 		double lr = learningRate;
 		int j;
 		int epochs = 0;
-		while(!good) {
+		while (!good) {
 			epochs++;
 			good = true;
 			j = -1;
-			for(auto [key, target] : inOutPairs) {
+			for (auto [key, target] : inOutPairs) {
 				j++;
 				current = activationFunction->f(key.dot(weights));
-				if(((current > (target +.001)) || (current < (target - .001))) && lr > 0.001) {
+				if (((current > (target + .001)) || (current < (target - .001))) && lr > 0.001) {
 					good = false;
 					error = errorFunction(target, current);
 					dEOverdOut = -(target - current);
 					lastNeg[j] = neg[j];
-					if(dEOverdOut >= 0) {
+					if (dEOverdOut >= 0) {
 						neg[j] = false;
-					} else {
+					}
+					else {
 						neg[j] = true;
 					}
 					dOutOverdNet = activationFunction->df(current);
-					for(int i = 0; i < key.size( ); i++) {
+					for (int i = 0; i < key.size(); i++) {
 						dNetOverdW = key[i];
 						dW = dEOverdOut * dOutOverdNet * dNetOverdW;
 						weights[i] -= (lr * dW);
 					}
-					if(neg[j] != lastNeg[j]) {
+					if (neg[j] != lastNeg[j]) {
 						lr *= 0.9;
-					} else {
+					}
+					else {
 						lr *= 1.1;
 					}
-					for(int i = 0; i < weights.size( ); i++) {
+					for (int i = 0; i < weights.size(); i++) {
 						printf("w%d %f ", i, weights[i]);
 					}
 					printf("\n");
 				}
 			}
 		}
-		for(int i = 0; i < weights.size( ); i++) {
+		for (int i = 0; i < weights.size(); i++) {
 			printf("w%d %f ", i, weights[i]);
 		}
 		printf("Epochs: %d", epochs);
@@ -82,12 +83,5 @@ public:
 
 private:
 	VectorXd weights;
-
-	std::uniform_real_distribution<double> uniformRealDistribution{ 0.0, 1.0 };
-	std::default_random_engine defaultRandomEngine{ std::random_device{}() };
-
-	double getRandomWeight( ) {
-		return uniformRealDistribution(defaultRandomEngine);
-	};
 
 };

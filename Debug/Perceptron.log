@@ -1,4 +1,3 @@
-﻿  Main.cpp
-  Perceptron.cpp
-  Generating Code...
+﻿  FeedForward.cpp
+C:\Users\johng\source\repos\Perceptron\Perceptron\FeedForward.cpp(9,20): warning C4018: '<': signed/unsigned mismatch
   Perceptron.vcxproj -> C:\Users\johng\source\repos\Perceptron\Debug\Perceptron.exe
