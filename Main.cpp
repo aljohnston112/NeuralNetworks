@@ -25,16 +25,25 @@ int main() {
 					{v3, 0}
 	};
 
-	Perceptron p(2);
+	Perceptron p(2, new ActivationFunctions::Sigmoid, new ErrorFunctions::Squared);
 	ActivationFunctions::Sigmoid* s = new ActivationFunctions::Sigmoid();
 	double learningRate = 1.0;
-	p.train<ComparatorVectorXd>(
-		inOutPairs,
-		s,
-		BackpropogationFunctions::subInFromWeights,
-		ErrorFunctions::squared,
-		learningRate);
+	p.train<ComparatorVectorXd>(inOutPairs);
 
 	FeedForward ff(2, 0, std::vector<int>(0), 1);
 
+	VectorXd v4(3);
+	v << .05, .01, 1;
+	VectorXd v5(3);
+	v1 << .1, .99, 1;
+
+	std::map<
+		const VectorXd,
+		double,
+		ComparatorVectorXd,
+		Eigen::aligned_allocator<std::pair<const VectorXd, double>>
+	> inOutPairs2{
+					{v4, 1},
+					{v5, 1},
+	};
 }

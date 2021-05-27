@@ -1,3 +1,11 @@
 ﻿  FeedForward.cpp
+C:\Users\johng\source\repos\Perceptron\Perceptron\Perceptron.h(41,65): error C2187: syntax error: ')' was unexpected here
+C:\Users\johng\source\repos\Perceptron\Perceptron\Perceptron.h(41,65): message : This diagnostic occurred in the compiler generated function 'void Perceptron::train(std::map<const Eigen::VectorXd,double,T,Eigen::aligned_allocator<std::pair<const Eigen::VectorXd,double>>>)'
 C:\Users\johng\source\repos\Perceptron\Perceptron\FeedForward.cpp(9,20): warning C4018: '<': signed/unsigned mismatch
-  Perceptron.vcxproj -> C:\Users\johng\source\repos\Perceptron\Debug\Perceptron.exe
+  Main.cpp
+C:\Users\johng\source\repos\Perceptron\Perceptron\Perceptron.h(41,65): error C2187: syntax error: ')' was unexpected here
+C:\Users\johng\source\repos\Perceptron\Perceptron\Perceptron.h(41,65): message : This diagnostic occurred in the compiler generated function 'void Perceptron::train(std::map<const Eigen::VectorXd,double,T,Eigen::aligned_allocator<std::pair<const Eigen::VectorXd,double>>>)'
+  Perceptron.cpp
+C:\Users\johng\source\repos\Perceptron\Perceptron\Perceptron.h(41,65): error C2187: syntax error: ')' was unexpected here
+C:\Users\johng\source\repos\Perceptron\Perceptron\Perceptron.h(41,65): message : This diagnostic occurred in the compiler generated function 'void Perceptron::train(std::map<const Eigen::VectorXd,double,T,Eigen::aligned_allocator<std::pair<const Eigen::VectorXd,double>>>)'
+  Generating Code...

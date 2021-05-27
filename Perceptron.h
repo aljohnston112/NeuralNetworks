@@ -11,7 +11,12 @@ using namespace ActivationFunctions;
 
 class Perceptron {
 public:
-	Perceptron(int numInputs);
+	Perceptron(
+		int numInputs,
+		ActivationFunctions::ActivationFunction* activationFunction,
+		ErrorFunctions::ErrorFunction* errorFunction,
+		double learningRate = 1
+	);
 
 	template <typename T>
 	void train(
@@ -19,69 +24,81 @@ public:
 		const VectorXd,
 		double,
 		T,
-		Eigen::aligned_allocator<std::pair<const VectorXd, double> >
-		> inOutPairs,
-		ActivationFunctions::ActivationFunction* activationFunction,
-		void (*backpropogationFunction)(const VectorXd&, VectorXd&, bool),
-		double (*errorFunction)(double target, double value),
-		double learningRate
+		Eigen::aligned_allocator<std::pair<const VectorXd, double>>
+		> inOutPairs
 	) {
 		bool good = false;
-		double current;
-		double error;
-		double dEOverdOut;
-		std::vector<bool> lastNeg(inOutPairs.size(), true);
-		std::vector<bool> neg(inOutPairs.size(), true);
-		double dOutOverdNet;
-		double dNetOverdW;
-		double dW;
-		double lr = learningRate;
 		int j;
 		int epochs = 0;
-		while (!good) {
+		while(!good) {
 			epochs++;
 			good = true;
 			j = -1;
-			for (auto [key, target] : inOutPairs) {
+			for(auto [key, target] : inOutPairs) {
 				j++;
-				current = activationFunction->f(key.dot(weights));
-				if (((current > (target + .001)) || (current < (target - .001))) && lr > 0.001) {
+				getOutput(key);
+				backPropagate(target);
+				if((current > (target + .001)) || (current < (target - .001))) {
 					good = false;
-					error = errorFunction(target, current);
-					dEOverdOut = -(target - current);
-					lastNeg[j] = neg[j];
-					if (dEOverdOut >= 0) {
-						neg[j] = false;
-					}
-					else {
-						neg[j] = true;
-					}
-					dOutOverdNet = activationFunction->df(current);
-					for (int i = 0; i < key.size(); i++) {
-						dNetOverdW = key[i];
-						dW = dEOverdOut * dOutOverdNet * dNetOverdW;
-						weights[i] -= (lr * dW);
-					}
-					if (neg[j] != lastNeg[j]) {
-						lr *= 0.9;
-					}
-					else {
-						lr *= 1.1;
-					}
-					for (int i = 0; i < weights.size(); i++) {
+					for(int i = 0; i < weights.size(); i++) {
 						printf("w%d %f ", i, weights[i]);
 					}
 					printf("\n");
 				}
 			}
 		}
-		for (int i = 0; i < weights.size(); i++) {
+		for(int i = 0; i < weights.size(); i++) {
 			printf("w%d %f ", i, weights[i]);
 		}
 		printf("Epochs: %d", epochs);
 	};
 
+	double getOutput(const VectorXd* input) {
+		currentIn = input;
+		currentOut = activationFunction->f(input->dot(weights));
+		return currentOut;
+	};
+
+	std::vector<double> backPropagate(double target) {
+		double error;
+		error = errorFunction->f(target, currentOut);
+		double dEOverdOut;
+		double dOutOverdNet;
+		double dNetOverdW;
+		double dEOverdW;
+		std::vector<double> derivatives(0);
+		dEOverdOut = errorFunction->df(target, currentOut);
+		lastNeg[currentIn] = neg[currentIn];
+		if(dEOverdOut >= 0) {
+			neg[currentIn] = false;
+		} else {
+			neg[currentIn] = true;
+		}
+		if(neg[currentIn] == lastNeg[currentIn]) {
+			learningRate *= 1.1;
+		} else {
+			learningRate *= 0.9;
+		}
+
+		dOutOverdNet = activationFunction->df(currentOut);
+		for(int i = 0; i < currentIn->size(); i++) {
+			dNetOverdW = (*currentIn)[i];
+			dEOverdW = dEOverdOut * dOutOverdNet * dNetOverdW;
+			derivatives.emplace_back(dEOverdW);
+			weights[i] -= (learningRate * dEOverdW);
+		}
+		return derivatives;
+	};
+
 private:
 	VectorXd weights;
+	const VectorXd* currentIn;
+	double currentOut;
+	ActivationFunctions::ActivationFunction* activationFunction;
+	ErrorFunctions::ErrorFunction* errorFunction;
+	double learningRate;
+
+	std::map<const VectorXd*, bool> lastNeg{};
+	std::map<const VectorXd*, bool> neg{};
 
 };

@@ -44,7 +44,27 @@ namespace BackpropogationFunctions {
 };
 
 namespace ErrorFunctions {
-	inline double squared(double target, double output) {
-		return pow((target - output), 2) / 2.0;
+	class ErrorFunction {
+	public:
+		virtual double f(double target, double output) = 0;
+		virtual double df(double target, double output) = 0;
+		virtual ~ErrorFunction() = 0;
 	};
+
+	inline ErrorFunction::~ErrorFunction() {
+
+	};
+
+	class Squared : public ErrorFunction {
+	public:
+		inline double f(double target, double output) {
+			return pow((target - output), 2) / 2.0;
+		};
+
+		inline double df(double target, double output) {
+			return -(target - output);
+		};
+		
+	};
+
 }
