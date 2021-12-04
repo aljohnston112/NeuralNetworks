@@ -24,13 +24,13 @@ int main() {
 					{v2, 0},
 					{v3, 0}
 	};
-
-	Perceptron p(2, new ActivationFunctions::Sigmoid, new ErrorFunctions::Squared);
 	ActivationFunctions::Sigmoid* s = new ActivationFunctions::Sigmoid();
+	ErrorFunctions::Squared* e = new ErrorFunctions::Squared();
+	Perceptron p(2, s, e);
 	double learningRate = 1.0;
 	p.train<ComparatorVectorXd>(inOutPairs);
 
-	FeedForward ff(2, 0, std::vector<int>(0), 1);
+	FeedForward ff(2, 0, std::vector<int>(0), 1, s, e);
 
 	VectorXd v4(3);
 	v << .05, .01, 1;

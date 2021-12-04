@@ -34,11 +34,11 @@ public:
 			epochs++;
 			good = true;
 			j = -1;
-			for(auto [key, target] : inOutPairs) {
+			for(auto& [key, target] : inOutPairs) {
 				j++;
-				getOutput(key);
+				getOutput(&key);
 				backPropagate(target);
-				if((current > (target + .001)) || (current < (target - .001))) {
+				if((currentOut > (target + 0.001)) || (currentOut < (target - 0.001))) {
 					good = false;
 					for(int i = 0; i < weights.size(); i++) {
 						printf("w%d %f ", i, weights[i]);
@@ -79,7 +79,6 @@ public:
 		} else {
 			learningRate *= 0.9;
 		}
-
 		dOutOverdNet = activationFunction->df(currentOut);
 		for(int i = 0; i < currentIn->size(); i++) {
 			dNetOverdW = (*currentIn)[i];
